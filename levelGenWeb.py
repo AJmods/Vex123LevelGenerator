@@ -130,11 +130,26 @@ import os
 
 st.set_page_config(page_title="VEX 123 Level Gen", layout="wide")
 # --- HIDE STREAMLIT STYLE ---
+# --- HIDE STREAMLIT BRANDING (MOBILE & DESKTOP) ---
 hide_st_style = """
             <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
+            /* Hides the top toolbar (hamburger menu, etc) */
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            header {visibility: hidden !important;}
+
+            /* Hides the "Made with Streamlit" footer */
+            footer {visibility: hidden !important;}
+
+            /* Removes the "Status Bar" that appears during load */
+            [data-testid="stStatusWidget"] {visibility: hidden !important;}
+
+            /* Eliminates top padding so the app feels like a full-screen app */
+            .block-container {
+                padding-top: 0rem;
+                padding-bottom: 0rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)

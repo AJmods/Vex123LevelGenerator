@@ -129,30 +129,40 @@ import os
 # --- [KEEP YOUR find_paths AND draw_paths_streamlit FUNCTIONS HERE] ---
 
 st.set_page_config(page_title="VEX 123 Level Gen", layout="wide")
-# --- HIDE STREAMLIT STYLE ---
-# --- HIDE STREAMLIT BRANDING (MOBILE & DESKTOP) ---
-hide_st_style = """
-            <style>
-            /* Hides the top toolbar (hamburger menu, etc) */
-            [data-testid="stToolbar"] {visibility: hidden !important;}
-            header {visibility: hidden !important;}
+# --- TOTAL BRANDING REMOVAL ---
+st.markdown("""
+    <style>
+        /* 1. Hide the top header/toolbar entirely */
+        [data-testid="stHeader"], 
+        [data-testid="stToolbar"], 
+        header {
+            display: none !important;
+        }
 
-            /* Hides the "Made with Streamlit" footer */
-            footer {visibility: hidden !important;}
+        /* 2. Hide the footer and the 'Made with Streamlit' link */
+        footer {
+            display: none !important;
+        }
 
-            /* Removes the "Status Bar" that appears during load */
-            [data-testid="stStatusWidget"] {visibility: hidden !important;}
+        /* 3. Hide the GitHub/Link icon specifically */
+        [data-testid="stAppDeployButton"],
+        .viewerBadge_container__1QSob,
+        .viewerBadge_link__1W1DE {
+            display: none !important;
+        }
 
-            /* Eliminates top padding so the app feels like a full-screen app */
-            .block-container {
-                padding-top: 0rem;
-                padding-bottom: 0rem;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
+        /* 4. Remove extra space at the top so the app looks professional */
+        .main .block-container {
+            padding-top: 0rem !important;
+            margin-top: -2rem !important;
+        }
+
+        /* 5. Hide the 'running' hamburger icon on mobile */
+        #MainMenu {
+            display: none !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 st.title("VEX 123 Level Generator")
 
 # Initialize session state for the custom menu

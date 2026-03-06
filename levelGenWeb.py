@@ -235,10 +235,7 @@ footer_html = """
             © 2026 Andrew Danda
         </div>
         <div>
-            Made for ASP G1 Vex 123 STEM fair
-        </div>
-        <div class="author-signature">
-            This code is by Andrew Danda
+            Made for ASP Grade 1 VEX 123 Sandwich STEM fair project
         </div>
     </div>
 </div>

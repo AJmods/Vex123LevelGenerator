@@ -129,6 +129,15 @@ import os
 # --- [KEEP YOUR find_paths AND draw_paths_streamlit FUNCTIONS HERE] ---
 
 st.set_page_config(page_title="VEX 123 Level Gen", layout="wide")
+# --- HIDE STREAMLIT STYLE ---
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 st.title("VEX 123 Level Generator")
 
 # Initialize session state for the custom menu

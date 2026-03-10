@@ -23,9 +23,9 @@ st.markdown(hide, unsafe_allow_html=True)
 
 # --- KEEP YOUR find_paths FUNCTION HERE ---
 
-def draw_paths_streamlit(A, paths, level_folder):
+def draw_paths_streamlit(A, paths, level_folder, max_allowed_images):
 
-    fig, ax = plt.subplots(figsize=(A, A))
+    fig, ax = plt.subplots(figsize=(A, A),constrained_layout=True)
 
     # 1. Background Texture
     if os.path.exists('images/Vex123Sqaure.png'):
@@ -41,25 +41,24 @@ def draw_paths_streamlit(A, paths, level_folder):
     path = random.choice(paths)
     base_path = f"images/{level_folder}"
 
-    # 2. Load Start and End
+    # Load images
     img_start = Image.open(f"{base_path}/start.png")
     img_end = Image.open(f"{base_path}/end.png")
 
-    # 3. Load all available turn images into a list
-    # This looks for turn1.png, turn2.png, etc.
     turn_images = []
     i = 1
     while os.path.exists(f"{base_path}/turn{i}.png"):
         turn_images.append(Image.open(f"{base_path}/turn{i}.png"))
         i += 1
 
-    # If no turn images found, use a fallback or skip
-    if not turn_images:
-        st.error(f"No turn images (turn1.png, etc.) found in {base_path}")
-        return fig
+    # Logic to decide WHICH points in the path get an image
+    # We always show start (index 0) and end (index -1)
+    # We fill the remaining (max_allowed_images - 2) slots with turns
 
-    # 4. Place images on the grid
+    placed_images_count = 2  # Start and End are guaranteed
+    turn_slots_available = max_allowed_images - 2
     turn_count = 0
+
     for i, (r, c) in enumerate(path):
         current_img = None
 
@@ -68,28 +67,18 @@ def draw_paths_streamlit(A, paths, level_folder):
         elif i == len(path) - 1:
             current_img = img_end
         else:
-            # Check for a turn
+            # Check if this coordinate is a turn
             prev_r, prev_c = path[i - 1]
             next_r, next_c = path[i + 1]
+            is_turn = (r - prev_r != next_r - r) or (c - prev_c != next_c - c)
 
-            # If the direction changed...
-            if (r - prev_r != next_r - r) or (c - prev_c != next_c - c):
-                # Use modulo (%) to cycle through turn_images
+            # Only place turn image if it's a turn AND we haven't hit our limit
+            if is_turn and turn_count < turn_slots_available:
                 current_img = turn_images[turn_count % len(turn_images)]
                 turn_count += 1
 
-        # if current_img:
-        #         #     # extent=(left, right, bottom, top)
-        #         #     ax.imshow(current_img, extent=(c - 0.4, c + 0.4, r + 0.4, r - 0.4), zorder=5)
-        # Inside your loop where you place images:
         if current_img:
-            # Full cell width: from (center - 0.5) to (center + 0.5)
-            ax.imshow(
-                current_img,
-                extent=(c - 0.5, c + 0.5, r + 0.5, r - 0.5),  # Full square
-                zorder=5
-            )
-
+            ax.imshow(current_img, extent=(c - 0.5, c + 0.5, r + 0.5, r - 0.5), zorder=5)
     ax.set_xlim(-0.5, A - 0.5)
     ax.set_ylim(A - 0.5, -0.5)
     ax.set_axis_off()  # Cleaner look for kids
@@ -171,9 +160,9 @@ if 'show_custom' not in st.session_state:
 
 # 1. Define the Level Settings
 levels = {
-    "Level 1": {"level":"level1", "A": 6, "turns": 1, "min_len": 3, "max_len": 4, "min_straight_length": 1},
-    "Level 2": {"level":"level2", "A": 6, "turns": 2, "min_len": 6, "max_len": 7, "min_straight_length": 2},
-    "Level 3": {"level":"level3", "A": 6, "turns": 3, "min_len": 7, "max_len": 9, "min_straight_length": 1},
+    "Level 1": {"level":"level1", "A": 6, "turns": 2, "max_images": 3, "min_len": 5, "max_len": 6, "min_straight_length": 2},
+    "Level 2": {"level":"level2", "A": 6, "turns": 3, "max_images": 4, "min_len": 8, "max_len": 10, "min_straight_length": 2},
+    "Level 3": {"level":"level3", "A": 6, "turns": 6, "max_images": 5, "min_len": 11, "max_len":14, "min_straight_length": 1},
 }
 
 # 2. Create the 4-Button Layout
@@ -229,10 +218,18 @@ if selected_config:
             min_straight_length=selected_config["min_straight_length"]
         )
 
+
+
+        # if results:
+        #
+        #     fig = draw_paths_streamlit(selected_config["A"], results, selected_config["level"])
+        #     st.pyplot(fig)
+        #     #st.balloons()
+
         if results:
-            fig = draw_paths_streamlit(selected_config["A"], results, selected_config["level"])
-            st.pyplot(fig)
-            #st.balloons()
+            m_img = selected_config.get("max_images", 3)  # Default to 3
+            fig = draw_paths_streamlit(selected_config["A"], results, selected_config["level"], m_img)
+            st.pyplot(fig, use_container_width=True)
         else:
             st.warning("No path found with these exact settings. Try fewer turns or longer length!")
     except Exception as e:

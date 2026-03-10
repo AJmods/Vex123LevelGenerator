@@ -15,8 +15,8 @@ def find_paths(
 
     minimum_required_length = (required_turns + 1) * min_straight_length
     print(str(minimum_required_length) +", " + str(min_length))
-    if minimum_required_length > min_length or min_straight_length > A:
-        raise ValueError('Minimum required length is less than minimum length')
+    if minimum_required_length > max_length or min_straight_length > A:
+        raise ValueError('Minimum required length ' + str(minimum_required_length) + ' is more than than max length ' + str(max_length))
 
 
     directions = [

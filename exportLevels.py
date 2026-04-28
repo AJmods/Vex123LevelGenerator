@@ -91,7 +91,7 @@ def mass_export():
 
         # 3. Export each path as its own image
         for idx, path in enumerate(all_possible_paths):
-            if random.randint(0, 1000) > 1:
+            if random.randint(0, 200000) > 1:
                 continue
             # We wrap the single path in a list because draw_paths_streamlit expects a list of paths
             fig = draw_paths_streamlit(

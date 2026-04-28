@@ -162,7 +162,7 @@ if 'show_custom' not in st.session_state:
 levels = {
     "Level 1": {"level":"level1", "A": 6, "turns": 2, "max_images": 3, "min_len": 5, "max_len": 6, "min_straight_length": 2},
     "Level 2": {"level":"level2", "A": 6, "turns": 3, "max_images": 4, "min_len": 8, "max_len": 10, "min_straight_length": 2},
-    "Level 3": {"level":"level3", "A": 6, "turns": 6, "max_images": 7, "min_len": 11, "max_len":14, "min_straight_length": 1},
+    "Level 3": {"level":"level3", "A": 6, "turns": 6, "max_images": 5, "min_len": 11, "max_len":14, "min_straight_length": 1},
 }
 
 # 2. Create the 4-Button Layout
